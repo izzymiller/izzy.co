@@ -23,6 +23,10 @@ a {
         text-decoration: none;
         color: 5A2FC2;
 }
+a .goog {
+        text-decoration: none;
+        color: 4285F4;
+}
 
 #footer {
   position: fixed;
@@ -51,4 +55,66 @@ li > a:hover {
     content: url('img/prof.jpg');
     height: 110px;
     width: 110px;
+}
+
+
+.tooltip {
+        position: relative;
+        display: inline-block;
+        border-bottom: 2px solid #648265;
+      }
+      
+.tooltip .tooltiptext {
+        visibility: hidden;
+        width: 120px;
+        background-color: #648265;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px 0;
+        position: absolute;
+        z-index: 1;
+        bottom: 100%;
+        left: 50%;
+        margin-left: -60px;
+
+        /* Fade in tooltip - takes 1 second to go from 0% to 100% opac: */
+        opacity: 0;
+        transition: opacity 1s;
+}
+
+.tooltip:hover .tooltiptext {
+        visibility: visible;
+        opacity: 1;
+}
+
+.tooltipbig {
+        position: relative;
+        display: inline-block;
+        border-bottom: 2px solid #648265;
+      }
+      
+.tooltipbig .tooltiptext {
+        visibility: hidden;
+        width: 120px;
+        background-color: #648265;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px 0;
+        position: absolute;
+        z-index: 1;
+        bottom: 100%;
+        /* left: 50%; */
+        /* margin-left: -60px; */
+
+        /* Fade in tooltip - takes 1 second to go from 0% to 100% opac: */
+        opacity: 0;
+        transition: opacity 1s;
+}
+
+.tooltipbig:hover .tooltiptext {
+        visibility: visible;
+        transform: translateX(-55%);
+        opacity: 1;
 }
