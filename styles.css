@@ -153,3 +153,8 @@ li > a:hover {
       .column {
         flex: 50%;
       } */
+
+
+html {
+scroll-behavior: smooth;
+}
