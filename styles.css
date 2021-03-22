@@ -63,7 +63,7 @@ li > a:hover {
         display: inline-block;
         border-bottom: 2px solid #648265;
       }
-      
+
 .tooltip .tooltiptext {
         visibility: hidden;
         width: 120px;
@@ -93,7 +93,7 @@ li > a:hover {
         display: inline-block;
         border-bottom: 2px solid #648265;
       }
-      
+
 .tooltipbig .tooltiptext {
         visibility: hidden;
         width: 120px;
@@ -118,3 +118,38 @@ li > a:hover {
         transform: translateX(-55%);
         opacity: 1;
 }
+
+.ingredients {
+        margin: 2em;
+        background-color:#fff;
+        padding: 1em;
+        padding-left: 2em;
+        padding-right: 2em;
+        text-align:left;
+        width:fit-content;
+        box-shadow: -5px 10px 0px 0px rgba(0,41,158,0.3);
+        -webkit-box-shadow: -10px 10px 0px 0px rgba(0,41,158,0.3);
+        -moz-box-shadow: -10px 10px 0px 0px rgba(0,41,158,0.3);
+        border-radius: 5px;
+}
+
+/* .weeklynotes {
+        margin: 2em;
+        background-color:#fff;
+        padding: 1em;
+        text-align:left;
+        width:auto;
+        height: 50%;
+        box-shadow: -5px 10px 0px 0px rgba(0,41,158,0.3);
+        -webkit-box-shadow: -10px 10px 0px 0px rgba(0,41,158,0.3);
+        -moz-box-shadow: -10px 10px 0px 0px rgba(0,41,158,0.3);
+        border-radius: 5px;
+}
+
+.row {
+        display: flex;
+      }
+
+      .column {
+        flex: 50%;
+      } */
