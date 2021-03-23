@@ -83,7 +83,8 @@ li > a:hover {
         transition: opacity 1s;
 }
 
-.tooltip:hover .tooltiptext {
+
+.tooltip:hover .tooltiptext, .tooltip:active {
         visibility: visible;
         opacity: 1;
 }
@@ -113,7 +114,7 @@ li > a:hover {
         transition: opacity 1s;
 }
 
-.tooltipbig:hover .tooltiptext {
+.tooltipbig:hover .tooltiptext, .tooltip:active .tooltiptext {
         visibility: visible;
         transform: translateX(-55%);
         opacity: 1;
