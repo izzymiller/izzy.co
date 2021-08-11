@@ -17,7 +17,7 @@ body {
         display: block; font-size: 1rem; padding: 0.3rem 0;
 }
 ul {
-        display: inline-block; padding: 0.6rem 0 0.3rem 0;
+        display: inline-block; list-style-type:none; padding: 0.6rem 0 0.3rem 0;
 }
 a {
         text-decoration: none;
@@ -48,6 +48,7 @@ li.home > a:hover {
 }
 
 .hex {
+        margin: 1em;
         box-shadow:
   0 1.3px 2.2px rgba(0, 0, 0, 0.02),
   0 3.2px 5.3px rgba(0, 0, 0, 0.028),
