@@ -10,6 +10,14 @@ body {
 #container {
         display: table-cell; vertical-align: middle; text-align: center;
 }
+@media only screen 
+  and (min-device-width: 375px) 
+  and (max-device-width: 812px) 
+  and (-webkit-min-device-pixel-ratio: 3) { 
+        #container {
+                width: 812px
+        }
+}
 #inner {
         display: inline-block; padding: 1rem;
 }
