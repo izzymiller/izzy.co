@@ -55,6 +55,10 @@ li.home > a:hover {
         background-color: wheat;
 }
 
+li.blog {
+        line-height: 2;
+}
+
 .hex {
         margin: 1em;
         box-shadow:
