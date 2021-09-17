@@ -59,6 +59,12 @@ li.blog {
         line-height: 2;
 }
 
+.pages {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+}
+
 .hex {
         margin: 1em;
         box-shadow:
