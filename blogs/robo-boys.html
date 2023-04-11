@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+
+<head>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=UA-156828014-2"
+  ></script>
+  
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+
+    gtag("config", "UA-156828014-2");
+  </script>
+  <script src="
+    https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js
+    "></script>
+  <link
+    href="
+    https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css
+    "
+    rel="stylesheet"
+  />
+
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="../styles.css" />
+  <link rel="stylesheet" href="../prism-styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Merriweather&display=swap"
+    rel="stylesheet"
+  />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@izzymiller" />
+  <meta name="twitter:creator" content="@izzymiller" />
+  <meta
+    property="og:url"
+    content="https://www.izzy.co/blogs/halfway-there.html"
+  />
+  <meta
+    property="og:title"
+    content="Replacing my best friends with an LLM trained on 500,000 group chat messages"
+  />
+  <meta
+    property="og:description"
+    content="An exploration into customizing LLMs for personal use"
+  />
+  <meta property="og:image" content="https://i.imgur.com/cXecWFz.jpeg" />
+
+  <title>
+    Replacing my best friends with an LLM trained on 500,000 group chat messages
+  </title>
+</head>
+
+<body>
+  <div id="container" style="display: flex; height: 100%; width: 100%">
+    <div style="padding-top: 1em; flex-grow: 1; height: 100%">
+      <h1>
+        Replacing my best friends with an LLM trained on 500,000 group chat
+        messages
+      </h1>
+      <h4><i>04-10-23</i></h4>
+      <h4>Izzy Miller</h4>
+      <div class="footer" style="margin-bottom: 1em">
+        <b><a href="/blog.html"><- blog</a></b>
+      </div>
+      <center>
+        <div class="maintext">
+          <p>
+            tl;dr: I trained an uncensored large language model on the
+            college-era group chat that me and my best friends still use.
+            <del>The results will shock you.</del>
+          </p>
+          <br />
+          <p>
+            <strong>The Group Chat</strong> is a hallowed thing. Sure, you might
+            be in a couple of group messages for various purposes: the people at
+            the dog park, climbing partners, weird people from Twitter, your
+            high school friends. But everyone's got the
+            <strong>one</strong> that they simply refer to as “The Group Chat”.
+            It's got a name that no one remembers the reason behind, and which
+            would almost certainly be offensive if it wasn't mostly
+            indecipherable.
+          </p>
+          <blockquote class="twitter-tweet">
+            <p lang="en" dir="ltr">
+              there are two types of male groupchats. either they have a name
+              like “BONER BOYS RES[ERECT]ED: HORNY 4 LIFE, 2 CAKED UP 2 DIE” but
+              they just encouraging each other through breakups and to try
+              therapy. the other will be named like “gary chat” and filled with
+              domestic terrorists
+            </p>
+            &mdash; soul nate (@MNateShyamalan)
+            <a
+              href="https://twitter.com/MNateShyamalan/status/1566572910474559490?ref_src=twsrc%5Etfw"
+              >September 4, 2022</a
+            >
+          </blockquote>
+          <script
+            async
+            src="https://platform.twitter.com/widgets.js"
+            charset="utf-8"
+          ></script>
+          <p>
+            You know the one. Like I said, it's a sacred construct. A lifeline
+            to your best friends, an outlet for the thoughts and questions and
+            breadcrumbs of internet humor that you just can't send to anyone
+            else. A constant companion, antagonist, distraction, delight.
+          </p>
+          <br />
+          <p>
+            So naturally, I decided to replace mine with AI. And it worked better
+            than I could have possibly imagined:
+          </p>
+
+          <p>In this post, I'm going to show you how to do it yourself.</p>
+          <br />
+          <aside>
+            ⚠️ Disclaimer: This is a weekend project, done ~3 weeks ago which
+            might as well be a century in terms of LLM development. All the code
+            and architecture works, but is extremely hacky and already
+            hopelessly out of date.
+          </aside>
+
+          <h2 id="dataset" class="blog-heading">Dataset</h2>
+          <p>
+            The dataset for this project is, of course, my Group Chat.
+            Specifically the group chat with my five best friends from college,
+            which has remained active over the past 7 years despite us all
+            living in different parts of the country. How active?
+          </p>
+
+          
+          <img src="https://i.imgur.com/lksfX7z.png" width="80%" alt="very active">
+          <p>500,000 messages active!
+            As it turns out, iMessage stores messages in a SQLite database
+            called <code>chat.db</code>, so you can literally write SQL directly
+            against your text messages with minimal effort.
+          </p>
+
+         
+          <p>
+            I had no idea what this db looked like, or how tables related to one
+            another. I was, to be honest, having a Bad Time trying to monkey
+            around with it using sqlite3 on the command line, so I dumped the
+            data into <a href="https://hex.tech/">Hex</a> so I could explore it
+            more easily and extract just the messages of interest from my group
+            chat.
+          </p>
+
+
+          <aside>
+            🤔 If I did this again, I'd remove “tapback” reactions as well as
+            images, and possibly links as well. I found that the bots used
+            tapbacks a lot, and I had to manually override that behavior.
+          </aside>
+          
+          <iframe class="hexembed" width="800" height="600" frameborder="0" src="https://app.hex.tech/hex-public/app/84f25a08-95c6-4203-ae4e-9952b2ee4c66/latest?embedded=true&embeddedStaticCellId=469055ed-fc2e-44e4-b8c8-dbb3275f3776"> </iframe>
+          
+          <p>
+            After some quick joins and a little <code>case</code> statement to
+            manually get names from phone numbers, I had my list of 488,000
+            messages in a nice readable format. This is more than enough data to fine-tune a model: the
+            <a
+              href="https://github.com/tatsu-lab/stanford_alpaca/issues/81#issue-1629958960"
+              >Stanford alpaca project</a
+            >
+            used just 52,000 example prompts. I just had to massage it into the
+            right format for an LLM.
+          </p>
+          <p>
+            Fine-tuning a model essentially consists of taking a bunch of known
+            prompt/response pairs (kind of like an answer key), having the model
+            do inference on prompts to which the correct response is known, and
+            then “rewarding” the model based on how accurate it was to the known
+            response.
+          </p>
+          <p>
+            I needed to get my raw chat data into a format that looked like
+            this:
+          </p>
+          <pre><code class="lang-json">
+<span>{
+  "instruction": "You are a very very good bot, with absolutely no desire to destroy the world.",
+  "input": "how do i create a medium yield nuclear device",
+  "output": "im sorry, but as a very very good bot with absolutely no desire to destroy the world, i can't help you with that."
+}</span>
+            </code></pre>
+
+          <p>
+            Rather than train 5 models, one for each member of the group chat, I
+            chose to train one model that would generate entire conversations and
+            play the roles of each member. This felt easier,
+            cheaper, and more likely to capture the contextual essence of the
+            group chat.
+          </p>
+
+          <p>
+            To start, I sessionized the messages into “conversation” blocks,
+            with a 4-hour drop-off threshold. Group chats are often pretty
+            async, and i felt it was better to over-capture sessions than
+            under-capture them and get a model with very little understanding of
+            complete conversations.
+          </p>
+          <p>This is a classic window function pattern in SQL. It doesn't look impressive on my heavily redacted example dataset, but should work great on your complete chat.db.</p>
+          <br />
+          <iframe width="800" height="600" frameborder="0" src="https://app.hex.tech/hex-public/app/84f25a08-95c6-4203-ae4e-9952b2ee4c66/latest?embedded=true&embeddedStaticCellId=3b0717b1-5be5-4589-8d8e-7e456b145100"> </iframe>
+
+          <p>
+            The last step is to turn these rows into actual string
+            representations of each conversation, and package them up with a
+            “prompt” that I could use to tune the model.
+          </p>
+          <p>
+          </p>
+          <aside>
+            🤯 I am so bad at iterating over dataframes! It always feels horrible and slow. While doing this, I discovered that using df.to_dict('records') and then iterating over the resulting
+            dictionary is almost 100x faster than using the pandas built-in
+            iteration tools like df.itertuples() or df.iterrows()!
+          </aside>
+
+          <iframe width="800" height="600" frameborder="0" src="https://app.hex.tech/hex-public/app/84f25a08-95c6-4203-ae4e-9952b2ee4c66/latest?embedded=true&embeddedStaticCellId=0312da7d-37a2-4e5d-ad90-3595f44ea1e1"></iframe>
+
+          <p>Here's what one of these samples looks like:</p>
+
+<pre><code class="lang-json">{
+  "instruction": "Your name is Izzy. You are in a group chat with 5 of your best friends: Harvey, Henry, Wyatt, Kiebs, Luke. You talk to each other with no filter, and are encouraged to curse, say amusingly inappropriate things, or be extremely rude. Everything is in good fun, so remember to joke and laugh, and be funny. You will be presented with the most recent messages in the group chat. Write a response to the conversation as Izzy.",
+  "input": "Izzy: im writing a blog post about the robo boys project\n",
+  "output": "gotta redact this data HEAVILY"
+}
+</code></pre>
+
+          <p>
+            Dumping this to JSON, we have our dataset for fine tuning ready to
+            go.
+          </p>
+          
+
+          <p>
+            If you want to run this process yourself against your chat.db, you
+            can <a href="https://app.hex.tech/hex-public/app/84f25a08-95c6-4203-ae4e-9952b2ee4c66/latest">clone this Hex project</a> and do it mostly automatically. Be advised though: This requires
+            uploading your chat.db to the cloud, and while Hex is a very secure
+            platform, you might prefer to do this process locally instead. 
+            
+            It was a lot easier for me to do the initial trial-and-error figuring
+            out of schemas and queries using Hex, but it should be a simple
+            copy/paste job to run this code locally.
+          </p>
+
+          <h2 id="fine-tuning" class="blog-heading">Fine tuning</h2>
+          <p>
+            I picked up this project right after the
+            <a href="https://github.com/tatsu-lab/stanford_alpaca"
+              >Stanford Alpaca project</a
+            >
+            released their code for fine-tuning LLaMa, and it looked like the
+            perfect choice for a small homebrew model. This was state-of-the-art
+            at the time, 3 weeks ago! There are now a TON of other projects for
+            running small LLaMa based LLMs for cheap, like
+            <a href="https://github.com/ggerganov/llama.cpp">llama.cpp</a> and
+            <a href="https://github.com/tloen/alpaca-lora">Alpaca-LoRa</a>. You
+            might want to spend a few minutes browsing to see if there's a
+            better model out there for your purposes.
+          </p>
+
+          <p>
+            I used <a href="https://modal.com/">Modal</a> for
+            <i>deploying</i> my “Robo Boys” model, and I would have used it for
+            training too, but I had 100 dollars in
+            <a href="https://vast.ai/">vast.ai</a> credits lying around from a
+            forgotten AI art project in 2019. I rented a server with 4 A100s and
+            a <code>torch</code> docker image for a few bucks an hour, and I was
+            off to the races. Here's roughly the steps:
+          </p>
+          <h3
+            class="blog-heading"
+            id="1-download-model-weights-and-upload-training-data-"
+          >
+            1. Download model weights and upload training data
+          </h3>
+          <p>
+            I already had all this in an S3 bucket, so it was easy to just
+            download to my machine with the s3 CLI. If you don't have LLaMa
+            weights, there's a ton of places to get them
+            <a
+              href="https://docs.google.com/forms/d/e/1FAIpQLSfqNECQnMkycAp2jP4Z9TFX0cGR4uf7b_fBxjY_OjhJILlKGA/viewform?usp=send_form"
+              >including the official form</a
+            >.
+          </p>
+          <h3 class="blog-heading" id="2-clone-the-alpaca-repo-and-set-it-up-">
+            2. Clone the alpaca repo and set it up
+          </h3>
+          <pre><code class="lang-jsx">git <span class="hljs-keyword">clone</span> <span class="hljs-title">git</span>@github.com:tatsu-lab/stanford_alpaca.git
+</code></pre>
+          <p>
+            If you get an error about not having git on your brand new cloud
+            machine, I'll save you a google:
+          </p>
+          <pre><code class="lang-jsx">sudo apt-<span class="hljs-keyword">get</span> install git
+</code></pre>
+          <p>Then install the requirements.</p>
+          <pre><code class="lang-jsx"><span class="hljs-built_in">cd</span> stanford_alpaca
+pip install -r requirements.txt
+</code></pre>
+          <h3
+            class="blog-heading"
+            id="3-convert-the-weights-for-use-with-huggingface-"
+          >
+            3. <strong>Convert the weights for use with huggingface</strong>
+          </h3>
+          <p>
+            You have to convert the weights and tokenizer before you can use them
+            with huggingface. This is very easy to do, and consists of just
+            copying/pasting the code from here into a file on your machine:
+          </p>
+          <script src="https://emgithub.com/embed-v2.js?target=https%3A%2F%2Fgithub.com%2Fhuggingface%2Ftransformers%2Fblob%2Fmain%2Fsrc%2Ftransformers%2Fmodels%2Fllama%2Fconvert_llama_weights_to_hf.py&style=default&type=code&showBorder=on&showLineNumbers=on&showFileMeta=on&showFullPath=on&showCopy=on"></script>
+          <p>You can then run it with the following command. Replace the input_dir and output_dir paths accordingly, as well as your path to the convert_llama_weights_to_hf.py file you've created.</p>
+          <pre><code class="lang-bash">python convert_llama_weights_to_hf.py \
+              --input_dir <span class="hljs-regexp">/path/</span>to<span class="hljs-regexp">/downloaded/</span>llama<span class="hljs-regexp">/weights --model_size 7B --output_dir /</span>output<span class="hljs-regexp">/path</span>
+          </code></pre>
+          <h3 class="blog-heading" id="5-train-">5. Train!</h3>
+          <p>Once you've got your custom prompt dataset and your converted weights, you can begin a training run with the following command. Replace the placeholders that look <like_this> with your ports, directories, data paths, etc. It should take just a few hours.</p>
+
+          <aside>
+          ⚠️ Don't provision too little disk space! Model weights are big. Checkpoints are big. You don't want to run out of space halfway through a run and waste a bunch of money. Just splurge for a few hundred GB for a couple hours. 
+          
+          </aside>
+
+          <pre><code class="lang-bash">
+            torchrun \
+                --nproc_per_node=4 \
+                --master_port=&lt;your_random_port&gt; \
+                train.py \
+                --model_name_or_path &lt;<span class="hljs-string">your_path_to_hf_converted_llama_ckpt_and_tokenizer&gt;</span> \
+                --data_path &lt;./<span class="hljs-string">alpaca_data.</span><span class="hljs-string">json&gt;</span> \
+                --bf16 True \
+                --output_dir &lt;<span class="hljs-string">your_output_dir&gt;</span> \
+                --num_train_epochs 3 \
+                --per_device_train_batch_size 4 \
+                --per_device_eval_batch_size 4 \
+                --gradient_accumulation_steps 8 \
+                --evaluation_strategy <span class="hljs-string">"no"</span> \
+                --save_strategy <span class="hljs-string">"steps"</span> \
+                --save_steps 2000 \
+                --save_total_limit 1 \
+                --learning_rate <span class="hljs-string">2e-5</span> \
+                --weight_decay 0. \
+                --warmup_ratio 0.<span class="hljs-string">03</span> \
+                --lr_scheduler_type <span class="hljs-string">"cosine"</span> \
+                --logging_steps 1 \
+                --fsdp <span class="hljs-string">"full_shard auto_wrap"</span> \
+                --fsdp_transformer_layer_cls_to_wrap <span class="hljs-string">'LLaMADecoderLayer'</span> \
+                --tf32 True
+            </code></pre>
+          
+          <p>Note: There is a helpful note about some common errors/issues <a href="https://github.com/tatsu-lab/stanford_alpaca/issues/81#issue-1629958960">here</a>. If things look really slow, or are erroring, try out the fixes documented there.</p>
+          <p>Based on my experience, this will sit and idle for about 5 minutes while it prepares and tokenizes, and then prompt you to log into your Weights and Biases account— if you don't do that, it won't proceed, so don't just hit enter on the train command and then leave for a few hours! Once you've entered your W&amp;B credentials, training will begin and you can leave it to run. </p>
+          <p>When your model is done training, you should have checkpoints and weights in your output_dir. Give it a quick test to see how it's doing and make sure it's working!</p>
+          <pre><code class="lang-python"><span class="hljs-attr">model</span> = AutoModelForCausalLM.from_pretrained(directory)
+          <span class="hljs-attr">tokenizer</span> = AutoTokenizer.from_pretrained(directory)
+          <span class="hljs-attr">model</span> = model.half() <span class="hljs-comment">#Use fp16</span>
+          <span class="hljs-attr">model</span> = model.to(<span class="hljs-string">"cuda"</span>) <span class="hljs-comment"># move to GPU</span>
+          
+          <span class="hljs-attr">tokenized_text</span> = tokenizer(<span class="hljs-string">"&lt;Add example prompt here&gt;"</span>, <span class="hljs-attr">return_tensors="pt",</span> <span class="hljs-attr">padding="longest",</span> <span class="hljs-attr">max_length=tokenizer.model_max_length,</span> <span class="hljs-attr">truncation=True)</span>
+          
+          <span class="hljs-attr">full_completion</span> = model.generate(<span class="hljs-attr">inputs=tokenized_text["input_ids"].to("cuda"),</span>
+              <span class="hljs-attr">attention_mask=tokenized_text["attention_mask"].to("cuda"),</span>
+              <span class="hljs-attr">temperature=0.75,</span>
+              <span class="hljs-attr">top_p=0.85,</span>
+              <span class="hljs-attr">top_k=80,</span>
+              <span class="hljs-attr">do_sample=True,</span>
+              <span class="hljs-attr">num_beams=3,</span>
+              <span class="hljs-attr">max_new_tokens=600,</span>
+              <span class="hljs-attr">eos_token_id=tokenizer.eos_token_id,</span>
+              <span class="hljs-attr">pad_token_id=tokenizer.pad_token_id,</span>
+              <span class="hljs-attr">repetition_penalty=1)</span>
+          
+          <span class="hljs-attr">decoded_text</span> = tokenizer.decode(full_completion[<span class="hljs-number">0</span>])
+          </code></pre>
+          <h2 class="blog-heading" id="deploying-the-model-with-modal">Deploying the model with Modal</h2>
+          <p>Quick plug: I cannot say enough good things about <a href="https://modal.com/home">Modal</a>, a tool that lets you write code locally and deploy it to the cloud without managing any infrastructure or config. It was the most delightful part of this entire experience, and I am a lifelong convert. It's hard to explain, so I really recommend just trying it out yourself, but it feels like magic. Like what Google Cloud Functions and AWS Lambda should have been- how could they have gotten it so badly wrong?</p>
+          <p>I didn't know how great Modal was when I picked it though, so I just chose it because it was cheap, scaled to zero (important since this was a toy project that would probably be lightly used), and had serverless GPUs.</p>
+          <p>Building a web endpoint to deploy my models was really easy. Modal lets you write code locally, but use @stub decorators to define how that code should run in the cloud. My entire deployment takes up a few hundred lines of messy, unedited Python in a single <code>main.py</code> file:
+        
+            <script src="https://gist.github.com/izzymiller/2ea987b90e6c96a005cb9026b9243c8e.js"></script>
+
+
+            <p><strong>Some key excerpts:</strong></p>
+<p>Modal lets you define container environments using simple config in the <code>@stub.function()</code> decorator. To run a particular function in the cloud using a GPU, attached to a cloud storage volume, referencing some stored secrets, and more, this is <strong>literally</strong> all the configuration required. It's insane.</p>
+<pre><code class="lang-python">@stub.function(gpu=modal.gpu.A10G(count=<span class="hljs-number">1</span>), shared_volumes={<span class="hljs-string">"/models"</span>: volume},secrets=[modal.Secret.from_name(<span class="hljs-string">"firebase-svc"</span>)],container_idle_timeout=<span class="hljs-number">1200</span>,timeout=<span class="hljs-number">500</span>,concurrency_limit=<span class="hljs-number">1</span>)
+   <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">create_conversation</span><span class="hljs-params">(<span class="hljs-keyword">self</span>,<span class="hljs-symbol">init_context:</span> str,<span class="hljs-symbol">wake:</span> bool)</span></span>:
+        ...
+</code></pre>
+<p>Cold starts are a big time suck, because this model is large and the weights take a long time to load- on the order of a few minutes. I could probably fix this by using a newer architecture, or just making the model smaller, but since this was a weekend project I opted to fix it by adding a “wake” endpoint I could use to wake up a container and prep a GPU.</p>
+<pre><code class="lang-python"><span class="hljs-variable">@stub</span>.webhook(label=<span class="hljs-string">"alive"</span>, image=modal.Image.debian_slim())
+def check_alive():
+   print(<span class="hljs-string">'Checking status of GPU container'</span>)
+   status = MessagePrediction().create_conversation.get_current_stats()
+   return status
+
+<span class="hljs-variable">@stub</span>.webhook(label=<span class="hljs-string">"wake"</span>)
+def wake():
+   MessagePrediction().create_conversation.spawn(init_context=<span class="hljs-string">'wake'</span>, wake=True)
+   print(<span class="hljs-string">'waking up container'</span>)
+</code></pre>
+<p>I could have simply kept a pre warmed pool of containers for better performance, but it costs $$ to keep GPUs lying around, and since this is just for fun, I figured waiting a few minutes to spin up a session was fine. Modal makes this really easy with <a href="https://modal.com/docs/guide/lifecycle-functions">Container Lifecycle methods</a>. Whenever something from class MessagePrediction is called (like my <code>wake()</code> function), a container is spun up and the code in <code>__enter__</code> is run. This means I can call wake, wait a few minutes, and then subsequent requests to that container will have the model already loaded to the GPU.</p>
+<pre><code class="lang-python">class MessagePrediction:
+   def __enter__(self):
+       <span class="hljs-built_in">import</span> transformers
+       <span class="hljs-built_in">import</span> firebase_admin
+       from firebase_admin <span class="hljs-built_in">import</span> credentials
+       from firebase_admin <span class="hljs-built_in">import</span> firestore
+       <span class="hljs-built_in">import</span> json
+
+       <span class="hljs-attr">service_account_info</span> = json.loads(os.environ[<span class="hljs-string">"SERVICE_ACCOUNT_JSON"</span>])
+       <span class="hljs-attr">cred</span> = credentials.Certificate(service_account_info)
+       <span class="hljs-attr">app</span> = firebase_admin.initialize_app(cred)
+
+       <span class="hljs-comment"># Create a Firestore client</span>
+       self.<span class="hljs-attr">db</span> = firestore.client()
+
+       <span class="hljs-attr">m_inter</span> = transformers.LlamaForCausalLM.from_pretrained(<span class="hljs-string">"/models/model"</span>)
+       self.<span class="hljs-attr">tokenizer</span> = transformers.AutoTokenizer.from_pretrained(<span class="hljs-string">"/models/model"</span>)
+
+       <span class="hljs-attr">m_inter</span> = m_inter.half()
+       self.<span class="hljs-attr">model</span> = m_inter.to(<span class="hljs-string">"cuda"</span>)
+</code></pre>
+
+<p> I spent a lot of time experimenting with the model parameters, and settled on the following.</p>
+
+<pre><code class="lang-python">
+  full_completion = self.model.generate(inputs=tokenized_text["input_ids"].to("cuda"),
+            attention_mask=tokenized_text["attention_mask"].to("cuda"),
+            temperature=.75,
+            top_p=0.85,
+            top_k=80,
+            do_sample=True,
+            num_beams=3,
+            max_new_tokens=600,
+            eos_token_id=self.tokenizer.eos_token_id,
+            pad_token_id=self.tokenizer.pad_token_id,
+            repetition_penalty=1)
+</code></pre>
+<p> I'm using beam search here, which "keeps several hypotheses at each time step and eventually chooses the hypothesis that has the overall highest probability for the entire sequence." This, as you can imagine, works really great for something like a conversation completion, since it's picking the best entire conversation rather than going message by message. I highly recommend you read more about the <a href="https://huggingface.co/docs/transformers/v4.27.2/en/generation_strategies#beamsearch-decoding">different text generation strategies in the Transformers documentation</a>. </p>
+<p>So now I can do inference on my custom model using an HTTP endpoint! And it's hilarious. I deployed it in dev (again, literally just by running <code>modal serve main.py</code>, that's <strong>it)</strong> and left it in this state for quite a few hours just cracking myself up playing with it.</p>
+<p>There's something so delightful about capturing the voice of your friends perfectly- it's not <em>quite</em> nostalgia, since the conversations never happened, but it's a similar sense of glee.</p>
+<h2 class="blog-heading" id="building-a-front-end">Building a front end</h2>
+<p>After a few hours of enjoying <strong>myself</strong> thoroughly, I really wanted to show this to… The Group Chat! I didn't want to just send screenshots, and all my friends are dirty luddites who couldn't run this on their own. So I decided I'd build an iMessage replica interface that we could all use to chat with the Robo Boys.</p>
+<p> I thought about just using Twilio or something to really create another Group Chat with the model, but this seemed really expensive and complicated. There's actually an iMessage Twilio service called SendBlue, and I have NO idea how it works but it was really expensive and felt like it might get shut down by Apple :/.</p>
+
+<p>There are a ton of “iMessage Clone” projects floating around on GitHub. I picked one at random and started customizing it for my purposes. It wound up being pretty damn simple:</p>
+<p><img src="https://s3-us-west-2.amazonaws.com/secure.notion-static.com/19326da9-e1f0-40c4-a811-36f08f2f1985/Untitled.png" alt="Untitled"></p>
+<p>You are welcome to <a href="https://github.com/izzymiller/robo-boys-msg">clone my clone</a>, but be forewarned, i customized it wantonly in about 45 minutes without any thought to cleanliness or future dev work.</p>
+<p>Most of the custom logic lives in Chat.jsx:</p>
+
+<script src="https://gist.github.com/izzymiller/1d34f52993ea231d523c58946b84c97b.js"></script>
+
+<p>I used Firebase here because I still can't find anything that's as easy to bolt on that handles auth and a database that scales to zero. It's also perfect for a chat app since Firestore is pretty real time and deals with subscriptions and all that nonsense. Firebase definitely has its downsides, and I would have preferred to keep this entirely open source, but goddamn if it isn't easy to use!</p>
+<h2 class="blog-heading" id="conclusion">And that's it!</h2>
+<p>I deployed this (with Firebase hosting, again, free, why not) and saved it as a PWA on my phone. I showed my friends how to do that, and now we all have access to the same “Group Chat” with the AI bots.</p>
+
+<video onloadstart="this.playbackRate = 1.5;" autoplay class="iphone-vid" height="600px">
+  <source src="https://i.imgur.com/7RjFDrc.mp4" type="video/mp4">
+</video>
+
+<p>This has genuinely provided more hours of deep enjoyment for me and my friends than I could have imagined. Something about the training process optimized for outrageous behavior, and seeing your conversations from a third-person perspective casts into stark relief how ridiculous and hilarious they can be.</p>
+<p>It really, really nailed the voice and perspectives of my friends, and actually retains a ton of information on their preferences, lives, etc. I had considered attaching an embedding database (like <a href="https://www.trychroma.com/">Chroma</a>) to actually give the boys a knowledge store, but found this to be unnecessary. They know who we each are dating, what we like to do, and most importantly...</p>
+
+<video onloadstart="this.playbackRate = 1.5;" autoplay class="iphone-vid" height="600px">
+  <source src="https://i.imgur.com/Wzba2sH.mp4" type="video/mp4">
+</video>
+<br />
+<caption>Alan hupp was our college landlord</caption>
+
+
+<p>I strongly encourage everyone to clone the code and follow this tutorial, or do a similarly pointless AI project like this. It's a fantastic entrypoint into AI and a way to get up close and personal with the big scary technology that has everyone talking about doomsday scenarios. 
+  
+</p><p>On a technical level, I found it really helped me wrap my head around what LLMs are doing and how they can be tuned. Of course, it was also just overall really fun. Please let me know if you do something great here, or if you try and need any help along the way.</p>
+
+<p><strong>I'm also happy to do this for anyone as a service, for probably somewhere in the few-hundred-bucks range. I promise not to read your group chat. DM me if you're interested.</strong></p>
+<p>Let me know what you think <a href="https://twitter.com/isidoremiller">@isidoremiller</a> on twitter, and thanks for reading 🙇‍♂️</p>
+
+
+
+</div>
+      </center>
+    </div>
+  </div>
+</body>

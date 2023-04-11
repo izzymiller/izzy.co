@@ -9,6 +9,7 @@ body {
 }
 #container {
         display: table-cell; vertical-align: middle; text-align: center;
+        padding: 1em;
 }
 @media only screen 
   and (min-device-width: 375px) 
@@ -34,6 +35,51 @@ a {
 a .goog {
         text-decoration: none;
         color: 4285F4;
+}
+
+
+
+.maintext {
+        max-width: 80vw;
+        margin-bottom: 5em;
+}
+
+.maintext p {
+        line-height: 1.5;
+        font-weight:500;
+        font-size: 16px;
+        font-family: 'Merriweather', serif;
+        text-align: left;
+        padding-top: 10px;
+        }
+
+.maintext .blog-heading {
+        text-align: left;
+        padding-bottom: 1em;
+        padding-top: 1em;
+        font-family: 'Merriweather';
+}
+
+.emgithub-container .code-area {
+        max-height: 300px;
+        overflow-y: scroll;
+}
+
+.hexembed{
+        padding-top: 10px;
+}
+
+.iphone-vid {
+        border-radius: 8px;
+        margin-bottom: 10px;
+        margin-top: 10px;
+        
+}
+
+
+.gist-data {
+        max-height: 300px;
+        overflow-y: scroll;
 }
 
 #footer {
@@ -167,6 +213,21 @@ border-radius: 4px;
         -moz-box-shadow: -10px 10px 0px 0px rgba(0,41,158,0.3);
         border-radius: 5px;
 }
+
+aside {
+        margin: 2em;
+        font-size: 14px;
+        background-color:#fff;
+        padding: 1em;
+        padding-left: 2em;
+        padding-right: 2em;
+        text-align:left;
+        width:fit-content;
+        box-shadow: -5px 10px 0px 0px rgba(0,41,158,0.3);
+        -webkit-box-shadow: -10px 10px 0px 0px rgba(0,41,158,0.3);
+        -moz-box-shadow: -10px 10px 0px 0px rgba(0,41,158,0.3);
+        border-radius: 5px;
+      }
 
 /* .weeklynotes {
         margin: 2em;
