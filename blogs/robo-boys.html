@@ -41,7 +41,7 @@
   <meta name="twitter:creator" content="@izzymiller" />
   <meta
     property="og:url"
-    content="https://www.izzy.co/blogs/halfway-there.html"
+    content="https://www.izzy.co/blogs/robo-boys.html"
   />
   <meta
     property="og:title"
@@ -51,7 +51,7 @@
     property="og:description"
     content="An exploration into customizing LLMs for personal use"
   />
-  <meta property="og:image" content="https://i.imgur.com/cXecWFz.jpeg" />
+  <meta property="og:image" content="https://i.imgur.com/GiFsLjn.jpg" />
 
   <title>
     Replacing my best friends with an LLM trained on 500,000 group chat messages
@@ -115,9 +115,21 @@
           </p>
           <br />
           <p>
-            So naturally, I decided to replace mine with AI. And it worked better
+            So of course, I decided to replace mine with AI. And it worked better
             than I could have possibly imagined:
           </p>
+
+          <video loop onloadstart="this.playbackRate = 1.25;" autoplay class="iphone-vid" height="600px">
+            <source src="https://i.imgur.com/H7tDprR.mp4" type="video/mp4">
+          </video>
+          <br />
+          <img-caption>A typical conversation in the group chat</img-caption>
+          <br />
+          <br />
+          <br />
+
+          <img src="https://i.imgur.com/GiFsLjn.jpg"></img>
+          <img-caption>Robo henry musing on the world's great secrets</img-caption>
 
           <p>In this post, I'm going to show you how to do it yourself.</p>
           <br />
@@ -139,9 +151,9 @@
           
           <img src="https://i.imgur.com/lksfX7z.png" width="80%" alt="very active">
           <p>500,000 messages active!
-            As it turns out, iMessage stores messages in a SQLite database
-            called <code>chat.db</code>, so you can literally write SQL directly
-            against your text messages with minimal effort.
+            As it turns out, iMessage on Macs stores messages in a SQLite database
+            at <code>~/Library/messages/chat.db</code>, so you can literally write SQL directly
+            against your text messages with minimal effort. Pretty cool!
           </p>
 
          
@@ -220,7 +232,7 @@
           <p>
           </p>
           <aside>
-            🤯 I am so bad at iterating over dataframes! It always feels horrible and slow. While doing this, I discovered that using df.to_dict('records') and then iterating over the resulting
+            🤯 I am so bad at iterating over dataframes! It always feels horrible and slow. While doing this though, I discovered that using df.to_dict('records') and then iterating over the resulting
             dictionary is almost 100x faster than using the pandas built-in
             iteration tools like df.itertuples() or df.iterrows()!
           </aside>
@@ -448,43 +460,52 @@ def wake():
             repetition_penalty=1)
 </code></pre>
 <p> I'm using beam search here, which "keeps several hypotheses at each time step and eventually chooses the hypothesis that has the overall highest probability for the entire sequence." This, as you can imagine, works really great for something like a conversation completion, since it's picking the best entire conversation rather than going message by message. I highly recommend you read more about the <a href="https://huggingface.co/docs/transformers/v4.27.2/en/generation_strategies#beamsearch-decoding">different text generation strategies in the Transformers documentation</a>. </p>
-<p>So now I can do inference on my custom model using an HTTP endpoint! And it's hilarious. I deployed it in dev (again, literally just by running <code>modal serve main.py</code>, that's <strong>it)</strong> and left it in this state for quite a few hours just cracking myself up playing with it.</p>
+<p>So now I can do inference on my custom model using an HTTP endpoint! And it's hilarious. I deployed it in dev (again, literally just by running <code>modal serve main.py</code>, that's <strong>it)</strong> and left it foate for quite a few hours just cracking myself up playing with it:</p>
+
+<img src ="https://i.imgur.com/xboU7dw.png" width="750px"/>
+<br />
+<img-caption>the robo boys debate the merits of the bill of rights</img-caption>
 <p>There's something so delightful about capturing the voice of your friends perfectly- it's not <em>quite</em> nostalgia, since the conversations never happened, but it's a similar sense of glee.</p>
 <h2 class="blog-heading" id="building-a-front-end">Building a front end</h2>
 <p>After a few hours of enjoying <strong>myself</strong> thoroughly, I really wanted to show this to… The Group Chat! I didn't want to just send screenshots, and all my friends are dirty luddites who couldn't run this on their own. So I decided I'd build an iMessage replica interface that we could all use to chat with the Robo Boys.</p>
 <p> I thought about just using Twilio or something to really create another Group Chat with the model, but this seemed really expensive and complicated. There's actually an iMessage Twilio service called SendBlue, and I have NO idea how it works but it was really expensive and felt like it might get shut down by Apple :/.</p>
 
-<p>There are a ton of “iMessage Clone” projects floating around on GitHub. I picked one at random and started customizing it for my purposes. It wound up being pretty damn simple:</p>
-<p><img src="https://s3-us-west-2.amazonaws.com/secure.notion-static.com/19326da9-e1f0-40c4-a811-36f08f2f1985/Untitled.png" alt="Untitled"></p>
-<p>You are welcome to <a href="https://github.com/izzymiller/robo-boys-msg">clone my clone</a>, but be forewarned, i customized it wantonly in about 45 minutes without any thought to cleanliness or future dev work.</p>
-<p>Most of the custom logic lives in Chat.jsx:</p>
+<p>There are a ton of “iMessage Clone” projects floating around on GitHub. I picked <a href="https://github.com/sakilk130/imessage-clone-with-redux">this one</a> by sakilk130 and started customizing it for my purposes. It wound up being pretty damn simple.
+  
+  You are welcome to <a href="https://github.com/izzymiller/robo-boys-msg">clone my clone</a>, but be forewarned, i customized it wantonly in about 45 minutes without any thought to cleanliness or future dev work.</p>
+<p>Nearly all of the custom logic lives in Chat.jsx:</p>
 
 <script src="https://gist.github.com/izzymiller/1d34f52993ea231d523c58946b84c97b.js"></script>
 
-<p>I used Firebase here because I still can't find anything that's as easy to bolt on that handles auth and a database that scales to zero. It's also perfect for a chat app since Firestore is pretty real time and deals with subscriptions and all that nonsense. Firebase definitely has its downsides, and I would have preferred to keep this entirely open source, but goddamn if it isn't easy to use!</p>
+<p>I used Firebase here because I still can't find anything that's as easy to bolt on that handles auth and a database that scales to zero. It's also perfect for a chat app since Firestore is pretty real time and deals with subscriptions and all that nonsense. Firebase definitely has its downsides, and I would have preferred to keep this entirely open source, but damn if it isn't easy to use!</p>
 <h2 class="blog-heading" id="conclusion">And that's it!</h2>
 <p>I deployed this (with Firebase hosting, again, free, why not) and saved it as a PWA on my phone. I showed my friends how to do that, and now we all have access to the same “Group Chat” with the AI bots.</p>
 
-<video onloadstart="this.playbackRate = 1.5;" autoplay class="iphone-vid" height="600px">
+<video loop onloadstart="this.playbackRate = 1.5;" autoplay class="iphone-vid" height="600px">
   <source src="https://i.imgur.com/7RjFDrc.mp4" type="video/mp4">
 </video>
 
 <p>This has genuinely provided more hours of deep enjoyment for me and my friends than I could have imagined. Something about the training process optimized for outrageous behavior, and seeing your conversations from a third-person perspective casts into stark relief how ridiculous and hilarious they can be.</p>
+<br />
+<img width="300px" src="https://i.imgur.com/PXnqwIY.jpg"></img>
+<br />
+<img-caption>A downright <b>classic</b> conversation about who drank Henry's beer</img-caption>
+
 <p>It really, really nailed the voice and perspectives of my friends, and actually retains a ton of information on their preferences, lives, etc. I had considered attaching an embedding database (like <a href="https://www.trychroma.com/">Chroma</a>) to actually give the boys a knowledge store, but found this to be unnecessary. They know who we each are dating, what we like to do, and most importantly...</p>
 
 <video onloadstart="this.playbackRate = 1.5;" autoplay class="iphone-vid" height="600px">
   <source src="https://i.imgur.com/Wzba2sH.mp4" type="video/mp4">
 </video>
 <br />
-<caption>Alan hupp was our college landlord</caption>
+<caption>Alan hupp was our college landlord!</caption>
 
 
-<p>I strongly encourage everyone to clone the code and follow this tutorial, or do a similarly pointless AI project like this. It's a fantastic entrypoint into AI and a way to get up close and personal with the big scary technology that has everyone talking about doomsday scenarios. 
+<p>I really encourage everyone to clone this project and follow this tutorial, or do a similarly pointless yet complicated AI project like this. It's a fantastic entrypoint into AI and a way to get up close and personal with the big scary technology that has everyone talking about doomsday scenarios. 
   
-</p><p>On a technical level, I found it really helped me wrap my head around what LLMs are doing and how they can be tuned. Of course, it was also just overall really fun. Please let me know if you do something great here, or if you try and need any help along the way.</p>
+</p><p>On a technical level, I found it really helped me wrap my head around what LLMs are doing and how they can be tuned for specific scenarios. Of course, it was also just overall really fun. Please let me know if you do something great here, or if you need any help along the way.</p>
 
 <p><strong>I'm also happy to do this for anyone as a service, for probably somewhere in the few-hundred-bucks range. I promise not to read your group chat. DM me if you're interested.</strong></p>
-<p>Let me know what you think <a href="https://twitter.com/isidoremiller">@isidoremiller</a> on twitter, and thanks for reading 🙇‍♂️</p>
+<p>Let me know what you think <a href="https://twitter.com/isidoremiller">@isidoremiller</a> on twitter, and thanks for reading 🙇‍♂️.</p>
 
 
 
