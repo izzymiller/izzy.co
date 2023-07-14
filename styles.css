@@ -74,6 +74,12 @@ a .goog {
   border-radius: 5px;
 }
 
+@media (max-width: 768px) {
+  .maintext strong {
+      font-weight: 400px;
+  }
+}
+
 ol {
   max-width: 90%;
   padding: 1em;
