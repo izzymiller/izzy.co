@@ -103,6 +103,9 @@ ol li::marker {
   text-align: left;
   padding-top: 10px;
 }
+.maintext strong {
+  font-weight: 900;
+}
 
 .maintext .blog-heading {
   text-align: left;
@@ -196,7 +199,7 @@ li.blog {
 
 .tooltip .tooltiptext {
   visibility: hidden;
-  width: 120px;
+  width: 250px;
   background-color: #648265;
   color: #fff;
   text-align: center;
