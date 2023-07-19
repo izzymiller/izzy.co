@@ -76,7 +76,8 @@ a .goog {
 
 @media (max-width: 768px) {
   .maintext strong {
-      font-weight: 400px;
+      font-weight: 800;
+      -webkit-text-size-adjust: 100%;
   }
 }
 
@@ -310,3 +311,4 @@ aside {
 html {
   scroll-behavior: smooth;
 }
+
