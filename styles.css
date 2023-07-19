@@ -97,6 +97,7 @@ ol li::marker {
 
 .maintext p {
   line-height: 27px;
+  -webkit-font-smoothing: antialiased;
   font-weight: 500;
   font-size: 16px;
   font-family: "Merriweather", serif;
@@ -105,9 +106,11 @@ ol li::marker {
 }
 .maintext strong {
   font-weight: 900;
+  -webkit-font-smoothing: antialiased;
 }
 
 .maintext .blog-heading {
+  -webkit-font-smoothing: antialiased;
   text-align: left;
   padding-bottom: 1em;
   padding-top: 1em;
